@@ -21,18 +21,54 @@ html[lang='ar'] body {
   min-height: 100svh;
 }
 
+/* Default text color so bare text renders consistently in dark mode */
+html.dark body {
+  color: #e5e7eb;
+  background-color: #030712;
+}
+
+/* Rich soft-gradient dark backdrop instead of a flat solid color */
+html.dark #root {
+  background:
+    radial-gradient(1200px 600px at 15% -5%, rgba(16, 185, 129, 0.12), transparent 60%),
+    radial-gradient(1000px 500px at 90% 0%, rgba(139, 92, 246, 0.12), transparent 55%),
+    radial-gradient(900px 600px at 50% 110%, rgba(59, 130, 246, 0.10), transparent 60%),
+    #030712;
+  background-attachment: fixed;
+}
+
+/* Let the root gradient show through the app/logo containers in dark mode */
+html.dark .dark\:bg-gray-950 {
+  background-color: transparent !important;
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: #94a3b8;
-  border-radius: 3px;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
 }
 .dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
   background: #475569;
+}
+
+/* Subtle card treatment for dark mode cards that use translucent backgrounds */
+.dark [class*="bg-white/70"],
+.dark [class*="bg-white/60"],
+.dark [class*="bg-gray-800/"],
+.dark [class*="bg-gray-900/"] {
+  border-color: rgba(148, 163, 184, 0.16);
 }
 
 @keyframes pulse-ring {
