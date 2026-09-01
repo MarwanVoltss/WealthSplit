@@ -65,13 +65,13 @@ export default function BucketCard({ icon: Icon, label, percentage, amount, colo
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${percentage}%` }}
-            transition={{ duration: 1.2, delay: delay + 0.3, ease: 'easeOut' }}
+            transition={{ duration: 0.7, delay: delay + 0.15, ease: 'easeOut' }}
             className="h-full rounded-full relative"
             style={{ backgroundColor: color }}
           >
             <motion.div
               animate={{ x: [-100, 100] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: 'linear' }}
               className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
               style={{ width: 50 }}
             />

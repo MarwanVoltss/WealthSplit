@@ -60,7 +60,7 @@ export default function StabilityTracker({ stabilityAmount, baselineExpenses, cu
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.4, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -3 }}
       className="relative overflow-hidden rounded-2xl border border-gray-200/80 dark:border-gray-700/80
         bg-white dark:bg-gray-800/60 shadow-md shadow-gray-200/50 dark:shadow-black/20 backdrop-blur-sm p-5 sm:p-6
@@ -116,12 +116,12 @@ export default function StabilityTracker({ stabilityAmount, baselineExpenses, cu
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
-            transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             className={`h-full rounded-full relative ${colors.bar}`}
           >
             <motion.div
               animate={{ x: ['-100%', '200%'] }}
-              transition={{ duration: 2, repeat: Infinity, delay: 1.4, ease: 'linear' }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.9, ease: 'linear' }}
               className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/40 to-transparent"
             />
           </motion.div>
@@ -134,7 +134,7 @@ export default function StabilityTracker({ stabilityAmount, baselineExpenses, cu
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.3 + m * 0.05 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.1 + m * 0.03 }}
                   className={`w-2 h-2 rounded-full -mt-[17px]
                     ${hit ? `${colors.bar} ring-2 ring-white dark:ring-gray-800` : 'bg-gray-300 dark:bg-gray-600'}`}
                 />

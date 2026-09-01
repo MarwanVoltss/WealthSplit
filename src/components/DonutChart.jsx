@@ -48,7 +48,7 @@ export default function DonutChart({ buckets, currency, income, language, onSele
     <motion.div
       initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
       className="relative flex items-center justify-center"
     >
       <div className="relative w-full max-w-[280px] aspect-square">
@@ -56,7 +56,7 @@ export default function DonutChart({ buckets, currency, income, language, onSele
           viewBox="0 0 280 280"
           initial={{ rotate: -90, scale: 0.6 }}
           animate={{ rotate: -90, scale: 1 }}
-          transition={{ duration: 0.9, ease: [0.34, 1.56, 0.64, 1] }}
+          transition={{ duration: 0.55, ease: [0.34, 1.56, 0.64, 1] }}
           className="w-full h-full"
         >
           <circle cx={cx} cy={cy} r={r} fill="none"
@@ -77,7 +77,7 @@ export default function DonutChart({ buckets, currency, income, language, onSele
                 strokeDashoffset={dashOffset}
                 strokeLinecap="round"
                 style={{
-                  transition: 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  transition: 'all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)',
                   cursor: 'pointer',
                   opacity: total > 0 ? 1 : 0.3,
                   filter: seg.isHovered ? `drop-shadow(0 0 8px ${seg.color}55)` : 'none',

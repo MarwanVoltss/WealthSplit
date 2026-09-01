@@ -325,7 +325,7 @@ export default function BucketDetailModal({ bucket, amount, currency, language, 
                 key={Math.round(d.progress)}
                 initial={{ width: 0 }}
                 animate={{ width: `${d.progress}%` }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
                 className="h-full rounded-full bg-blue-500"
               />
             </div>

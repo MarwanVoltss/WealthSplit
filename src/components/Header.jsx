@@ -30,7 +30,7 @@ export default function Header({ theme, toggleTheme, currency, setCurrency, lang
     <motion.header
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="flex items-center justify-between gap-3 mb-8 sm:mb-10 flex-wrap"
     >
       <div className="flex items-center gap-3">
@@ -44,7 +44,8 @@ export default function Header({ theme, toggleTheme, currency, setCurrency, lang
           <motion.div
             animate={{ scale: [1, 1.15, 1] }}
             transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute inset-0 rounded-xl bg-emerald-500/40 blur-lg"
+            className="absolute inset-0 rounded-xl"
+            style={{ background: 'radial-gradient(circle, rgba(16,185,129,0.45) 0%, transparent 70%)' }}
           />
           <DollarSign size={24} className="relative text-white" strokeWidth={2.5} />
         </motion.div>
@@ -52,7 +53,7 @@ export default function Header({ theme, toggleTheme, currency, setCurrency, lang
           <motion.h1
             initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
+            transition={{ delay: 0.08, duration: 0.35 }}
             className="text-xl sm:text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent"
           >
             WealthSplit
@@ -60,7 +61,7 @@ export default function Header({ theme, toggleTheme, currency, setCurrency, lang
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.25, duration: 0.5 }}
+            transition={{ delay: 0.15, duration: 0.35 }}
             className="text-[11px] font-medium text-gray-400 dark:text-gray-500 tracking-wide uppercase"
           >
             {t.header.subtitle}

@@ -62,17 +62,15 @@ export default function Login({ language, setLanguage }) {
 
   return (
     <div className="relative min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4 overflow-hidden">
-      {/* Ambient blobs */}
+      {/* Ambient blobs (static radial gradients — no blur filter, no per-frame re-raster) */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <motion.div
-          animate={{ y: [0, -20, 0] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-emerald-300/25 dark:bg-emerald-500/10 blur-3xl"
+        <div
+          className="absolute -top-24 -left-24 w-96 h-96 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(16,185,129,0.16) 0%, transparent 70%)' }}
         />
-        <motion.div
-          animate={{ y: [0, 20, 0] }}
-          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-blue-300/20 dark:bg-blue-500/10 blur-3xl"
+        <div
+          className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.14) 0%, transparent 70%)' }}
         />
       </div>
 
@@ -91,7 +89,7 @@ export default function Login({ language, setLanguage }) {
       <motion.div
         initial={{ opacity: 0, y: 24, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className="w-full max-w-md"
       >
         {/* Logo */}
@@ -278,7 +276,7 @@ function MickNote({ text }) {
     <motion.p
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ delay: 0.4 }}
+      transition={{ delay: 0.15 }}
       className="mt-4 text-center text-[11px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 rounded-lg px-3 py-2"
     >
       {text}

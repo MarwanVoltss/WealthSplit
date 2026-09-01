@@ -13,7 +13,7 @@ function InputCard({ icon: Icon, iconBg, iconColor, title, sub, symbol, value, o
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.35, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -3 }}
       className="rounded-2xl p-5 sm:p-6 border border-gray-200/80 dark:border-gray-700/80
         bg-white dark:bg-gray-800/60 shadow-md shadow-gray-200/50 dark:shadow-black/20 backdrop-blur-sm

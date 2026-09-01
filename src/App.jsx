@@ -150,22 +150,19 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300 overflow-hidden">
-      {/* Decorative ambient blobs */}
+      {/* Decorative ambient blobs (static radial gradients — no blur filter, no per-frame re-raster) */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <motion.div
-          animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-emerald-300/25 dark:bg-emerald-500/10 blur-3xl"
+        <div
+          className="absolute -top-24 -left-24 w-96 h-96 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(16,185,129,0.16) 0%, transparent 70%)' }}
         />
-        <motion.div
-          animate={{ x: [0, -30, 0], y: [0, 20, 0] }}
-          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-blue-300/20 dark:bg-blue-500/10 blur-3xl"
+        <div
+          className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.14) 0%, transparent 70%)' }}
         />
-        <motion.div
-          animate={{ x: [0, 20, 0], y: [0, -15, 0] }}
-          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-1/3 left-1/2 w-72 h-72 rounded-full bg-violet-300/15 dark:bg-violet-500/10 blur-3xl"
+        <div
+          className="absolute top-1/3 left-1/2 w-72 h-72 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.13) 0%, transparent 70%)' }}
         />
       </div>
 
@@ -197,7 +194,7 @@ export default function App() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.15 }}
+                transition={{ duration: 0.35, delay: 0.15 }}
                 className="lg:col-span-2 rounded-2xl border border-gray-200/80 dark:border-gray-700/80
                   bg-white dark:bg-gray-800/60 shadow-sm backdrop-blur-sm p-5 sm:p-6"
               >
@@ -213,7 +210,7 @@ export default function App() {
                       key={b.id}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.4 + i * 0.07 }}
+                      transition={{ delay: 0.15 + i * 0.06 }}
                       whileHover={{ x: 3 }}
                       className="flex items-center gap-2"
                     >
@@ -239,7 +236,7 @@ export default function App() {
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
+                  transition={{ duration: 0.35, delay: 0.15 }}
                   className="mt-4 rounded-2xl border border-gray-200/80 dark:border-gray-700/80
                     bg-white dark:bg-gray-800/60 shadow-sm backdrop-blur-sm p-5"
                 >
@@ -272,7 +269,7 @@ export default function App() {
                   tips={b.tips}
                   currency={currency}
                   language={language}
-                  delay={0.1 + i * 0.08}
+                  delay={0.05 + i * 0.05}
                   onSelect={() => setSelectedBucketId(b.id)}
                 />
               ))}
@@ -283,7 +280,7 @@ export default function App() {
           <motion.div
             initial={{ opacity: 0, y: 24, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.4, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col items-center justify-center py-16 text-center relative"
           >
             <motion.div
@@ -309,7 +306,7 @@ export default function App() {
         <motion.footer
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
+          transition={{ delay: 0.2 }}
           className="text-center py-8 mt-8 border-t border-gray-100 dark:border-gray-800/60"
         >
           <p className="text-xs text-gray-400 dark:text-gray-600">
