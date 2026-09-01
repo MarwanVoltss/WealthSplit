@@ -22,6 +22,7 @@ export const translations = {
       errorTaken: 'An account with this email already exists',
       errorGeneric: 'Something went wrong. Please try again.',
       demoNote: 'Demo mode: this runs without a database. Your data is stored only in this browser.',
+      keepMe: 'Keep me signed in',
     },
     income: {
       incomeTitle: 'Monthly Income',
@@ -159,6 +160,7 @@ export const translations = {
       errorTaken: 'يوجد حساب بهذا البريد بالفعل',
       errorGeneric: 'حدث خطأ ما. حاول مرة أخرى.',
       demoNote: 'الوضع التجريبي: يعمل بدون قاعدة بيانات. بياناتك محفوظة في هذا المتصفح فقط.',
+      keepMe: 'أبقني مسجلاً',
     },
     income: {
       incomeTitle: 'الدخل الشهري',

@@ -1,16 +1,10 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-} from 'firebase/auth';
-import { doc, setDoc, onSnapshot } from 'firebase/firestore';
-import { auth, db, isFirebaseConfigured } from './firebase';
+import { getFirebase, isFirebaseConfigured } from './firebase';
 
 const DEMO_USER_KEY = 'wealthsplit-demo-user';
 const DEMO_DATA_KEY = 'wealthsplit-data';
-const REMEMBER_KEY = 'wealthsplit-remember';
+const REMEMBER_EMAIL_KEY = 'wealthsplit-remember-email';
+const REMEMBER_SESSION_KEY = 'wealthsplit-remember-session';
 
 const AuthContext = createContext(null);
 
@@ -32,15 +26,23 @@ export function AuthProvider({ children }) {
       return;
     }
 
-    const unsub = onAuthStateChanged(auth, (fbUser) => {
-      if (fbUser) {
-        setUser({ uid: fbUser.uid, email: fbUser.email, name: fbUser.displayName || fbUser.email });
-      } else {
-        setUser(null);
-      }
-      setLoading(false);
+    let subscribed = false;
+    let unsub = () => {};
+    getFirebase().then(({ auth }) => {
+      if (!auth) return;
+      subscribed = true;
+      unsub = auth.onAuthStateChanged((fbUser) => {
+        if (fbUser) {
+          setUser({ uid: fbUser.uid, email: fbUser.email, name: fbUser.displayName || fbUser.email });
+        } else {
+          setUser(null);
+        }
+        setLoading(false);
+      });
     });
-    return unsub;
+    return () => {
+      if (subscribed) unsub();
+    };
   }, []);
 
   // ---- Load user's saved data (Firestore) ----
@@ -61,13 +63,21 @@ export function AuthProvider({ children }) {
       return;
     }
 
-    const docRef = doc(db, 'users', user.uid);
-    setUserData({ loading: true, data: null });
-    const unsub = onSnapshot(docRef, (snap) => {
-      const data = snap.exists() ? snap.data() : null;
-      setUserData({ loading: false, data });
+    let subscribed = false;
+    let unsub = () => {};
+    getFirebase().then(({ db }) => {
+      if (!db) return;
+      const docRef = db.doc(`users/${user.uid}`);
+      setUserData({ loading: true, data: null });
+      subscribed = true;
+      unsub = docRef.onSnapshot((snap) => {
+        const data = snap.exists() ? snap.data() : null;
+        setUserData({ loading: false, data });
+      });
     });
-    return unsub;
+    return () => {
+      if (subscribed) unsub();
+    };
   }, [user]);
 
   // ---- Save user data ----
@@ -84,9 +94,11 @@ export function AuthProvider({ children }) {
       }
 
       // Firestore write (fire-and-forget, debounced by caller)
-      const docRef = doc(db, 'users', user.uid);
-      setDoc(docRef, next, { merge: true })
-        .catch(() => {});
+      getFirebase().then(({ db }) => {
+        if (db) {
+          db.doc(`users/${user.uid}`).set(next, { merge: true }).catch(() => {});
+        }
+      });
       return payload;
     });
   }, [user]);
@@ -94,18 +106,24 @@ export function AuthProvider({ children }) {
   // ---- Auth actions ----
   const recallCredentials = useCallback(() => {
     try {
-      const raw = localStorage.getItem(REMEMBER_KEY);
-      return raw ? JSON.parse(raw) : null;
+      const email = localStorage.getItem(REMEMBER_EMAIL_KEY) || '';
+      // The password, when permitted, lives in sessionStorage only so it never
+      // persists on disk beyond the current browser session (avoids storing
+      // plaintext credentials in long-lived localStorage).
+      const password = sessionStorage.getItem(REMEMBER_SESSION_KEY) || '';
+      return email || password ? { email, password } : null;
     } catch { return null; }
   }, []);
 
   // Persist entered credentials so the user never re-types them.
   const rememberCredentials = useCallback((email, password) => {
-    try { localStorage.setItem(REMEMBER_KEY, JSON.stringify({ email, password })); } catch {}
+    try { localStorage.setItem(REMEMBER_EMAIL_KEY, email); } catch {}
+    try { sessionStorage.setItem(REMEMBER_SESSION_KEY, password); } catch {}
   }, []);
 
   const clearRemembered = useCallback(() => {
-    try { localStorage.removeItem(REMEMBER_KEY); } catch {}
+    try { localStorage.removeItem(REMEMBER_EMAIL_KEY); } catch {}
+    try { sessionStorage.removeItem(REMEMBER_SESSION_KEY); } catch {}
   }, []);
 
   const signUp = async (email, password) => {
@@ -117,7 +135,8 @@ export function AuthProvider({ children }) {
       setUser(demoUser);
       return demoUser;
     }
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    const { auth } = await getFirebase();
+    const cred = await auth.createUserWithEmailAndPassword(email, password);
     return { uid: cred.user.uid, email: cred.user.email, name: cred.user.displayName || cred.user.email };
   };
 
@@ -129,7 +148,8 @@ export function AuthProvider({ children }) {
       setUser(demoUser);
       return demoUser;
     }
-    const cred = await signInWithEmailAndPassword(auth, email, password);
+    const { auth } = await getFirebase();
+    const cred = await auth.signInWithEmailAndPassword(email, password);
     return { uid: cred.user.uid, email: cred.user.email, name: cred.user.displayName || cred.user.email };
   };
 
@@ -140,7 +160,8 @@ export function AuthProvider({ children }) {
       setUser(null);
       return;
     }
-    await signOut(auth);
+    const { auth } = await getFirebase();
+    await auth.signOut();
   };
 
   const value = {

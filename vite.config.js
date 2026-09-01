@@ -15,4 +15,16 @@ export default defineConfig({
   server: {
     open: true,
   },
+  build: {
+    chunkSizeWarningLimit: 900,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/framer-motion') || id.includes('node_modules/motion')) return 'motion';
+          if (id.includes('node_modules/react') || id.includes('node_modules/scheduler')) return 'react-vendor';
+          if (id.includes('node_modules/lucide-react')) return 'icons';
+        },
+      },
+    },
+  },
 })

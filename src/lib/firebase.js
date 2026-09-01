@@ -1,17 +1,3 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-
-// Firebase config — populate these from your Firebase project.
-// Create a `.env` file in the project root with these values, e.g.:
-//
-//   VITE_FIREBASE_API_KEY=...
-//   VITE_FIREBASE_AUTH_DOMAIN=...
-//   VITE_FIREBASE_PROJECT_ID=...
-//   VITE_FIREBASE_STORAGE_BUCKET=...
-//   VITE_FIREBASE_MESSAGING_SENDER_ID=...
-//   VITE_FIREBASE_APP_ID=...
-//
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -26,6 +12,26 @@ export const isFirebaseConfigured = Boolean(
   firebaseConfig.apiKey && firebaseConfig.projectId
 );
 
-export const app = isFirebaseConfigured ? initializeApp(firebaseConfig) : null;
-export const auth = isFirebaseConfigured ? getAuth(app) : null;
-export const db = isFirebaseConfigured ? getFirestore(app) : null;
+// Lazy singleton: the Firebase SDK is only loaded when a real config exists.
+// Keeps the demo-mode bundle small (no auth/firestore SDK) and avoids any
+// network/token work in local-only mode.
+let firebasePromise = null;
+
+export function getFirebase() {
+  if (!isFirebaseConfigured) return null;
+  if (!firebasePromise) {
+    firebasePromise = Promise.all([
+      import('firebase/app'),
+      import('firebase/auth'),
+      import('firebase/firestore'),
+    ]).then(([{ initializeApp }, { getAuth }, { getFirestore }]) => {
+      const app = initializeApp(firebaseConfig);
+      return {
+        app,
+        auth: getAuth(app),
+        db: getFirestore(app),
+      };
+    });
+  }
+  return firebasePromise;
+}

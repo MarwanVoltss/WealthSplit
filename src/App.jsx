@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, Shield, Home, PartyPopper, Info } from 'lucide-react';
 import Header from '@/components/Header';
@@ -6,10 +6,12 @@ import IncomeInput from '@/components/IncomeInput';
 import DonutChart from '@/components/DonutChart';
 import BucketCard from '@/components/BucketCard';
 import StabilityTracker from '@/components/StabilityTracker';
-import BucketDetailModal from '@/components/BucketDetailModal';
 import Login from '@/components/Login';
 import { useAuth } from '@/lib/AuthContext';
 import { useI18n } from '@/lib/i18n';
+
+// Lazy-loaded: only fetched when the user actually opens a breakdown.
+const BucketDetailModal = lazy(() => import('@/components/BucketDetailModal'));
 
 function makeBuckets(t) {
   return [
@@ -316,16 +318,18 @@ export default function App() {
         </motion.footer>
       </div>
 
-      {/* Bucket detail modal */}
+      {/* Bucket detail modal (lazy) */}
       {selectedBucketId && (
-        <BucketDetailModal
-          bucket={B.find((b) => b.id === selectedBucketId)}
-          amount={income * ((B.find((b) => b.id === selectedBucketId)?.percentage ?? 0) / 100)}
-          currency={currency}
-          language={language}
-          baselineExpenses={baselineExpenses}
-          onClose={() => setSelectedBucketId(null)}
-        />
+        <Suspense fallback={null}>
+          <BucketDetailModal
+            bucket={B.find((b) => b.id === selectedBucketId)}
+            amount={income * ((B.find((b) => b.id === selectedBucketId)?.percentage ?? 0) / 100)}
+            currency={currency}
+            language={language}
+            baselineExpenses={baselineExpenses}
+            onClose={() => setSelectedBucketId(null)}
+          />
+        </Suspense>
       )}
     </div>
   );

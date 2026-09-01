@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/AuthContext';
 
 export default function Login({ language, setLanguage }) {
   const t = useI18n(language);
-  const { signUp, logIn, logOut, recallCredentials, rememberCredentials, clearRemembered, isFirebaseConfigured } = useAuth();
+  const { signUp, logIn, recallCredentials, clearRemembered, isFirebaseConfigured } = useAuth();
 
   const [mode, setMode] = useState('login'); // 'login' | 'signup'
   const [email, setEmail] = useState('');
@@ -155,6 +155,9 @@ export default function Login({ language, setLanguage }) {
               <input
                 type="email"
                 required
+                autoComplete="email"
+                autoCapitalize="none"
+                spellCheck={false}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t.auth.email}
@@ -174,6 +177,7 @@ export default function Login({ language, setLanguage }) {
                 type={showPassword ? 'text' : 'password'}
                 required
                 minLength={6}
+                autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={t.auth.password}
