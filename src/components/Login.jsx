@@ -103,7 +103,8 @@ export default function Login({ language, setLanguage }) {
             <motion.div
               animate={{ scale: [1, 1.15, 1] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute inset-0 rounded-2xl bg-emerald-500/40 blur-lg"
+              className="absolute inset-0 rounded-2xl"
+              style={{ background: 'radial-gradient(circle, rgba(16,185,129,0.45) 0%, transparent 70%)' }}
             />
             <DollarSign size={28} className="relative text-white" strokeWidth={2.5} />
           </motion.div>

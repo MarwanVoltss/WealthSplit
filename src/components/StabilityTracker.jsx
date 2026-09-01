@@ -37,19 +37,19 @@ export default function StabilityTracker({ stabilityAmount, baselineExpenses, cu
       chip: 'bg-emerald-50 dark:bg-emerald-900/20',
       text: 'text-emerald-600 dark:text-emerald-400',
       bar: 'bg-emerald-500',
-      glow: 'from-emerald-400 to-transparent',
+      glow: '#34d399',
     },
     blue: {
       chip: 'bg-blue-50 dark:bg-blue-900/20',
       text: 'text-blue-600 dark:text-blue-400',
       bar: 'bg-blue-500',
-      glow: 'from-blue-400 to-transparent',
+      glow: '#60a5fa',
     },
     amber: {
       chip: 'bg-amber-50 dark:bg-amber-900/20',
       text: 'text-amber-600 dark:text-amber-400',
       bar: 'bg-amber-500',
-      glow: 'from-amber-400 to-transparent',
+      glow: '#fbbf24',
     },
   };
 
@@ -66,8 +66,8 @@ export default function StabilityTracker({ stabilityAmount, baselineExpenses, cu
         bg-white dark:bg-gray-800/60 shadow-md shadow-gray-200/50 dark:shadow-black/20 backdrop-blur-sm p-5 sm:p-6
         hover:shadow-lg hover:shadow-gray-300/40 dark:hover:shadow-black/40 transition-shadow"
     >
-      {/* Decorative glow */}
-      <div className={`pointer-events-none absolute -top-16 -right-16 w-48 h-48 rounded-full bg-gradient-to-br opacity-20 blur-2xl ${colors.glow}`} />
+      {/* Decorative glow (radial gradient — no blur filter) */}
+      <div className="pointer-events-none absolute -top-16 -right-16 w-48 h-48 rounded-full opacity-30" style={{ background: `radial-gradient(circle, ${colors.glow} 0%, transparent 70%)` }} />
 
       <div className="flex items-center justify-between mb-5 relative">
         <div className="flex items-center gap-2.5">
