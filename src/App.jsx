@@ -85,11 +85,14 @@ export default function App() {
   const [theme, setTheme] = useState(saved.theme ?? 'light');
   const [language, setLanguage] = useState(saved.language ?? 'en');
   const [selectedBucketId, setSelectedBucketId] = useState(null);
+  const [bucketItems, setBucketItems] = useState(saved.bucketItems ?? {});
 
   const t = useI18n(language);
 
-  // Sync state once when the loaded user data arrives from Firestore.
-  // Intentionally only runs when loading flips, so it doesn't clobber live edits.
+  // Sync state when the loaded user data arrives.
+  // Depends on userData.data (not just the loading flip) so a demo/local restore
+  // that lands after the initial default-state render still hydrates the app,
+  // instead of the save effect persisting defaults over the stored profile.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (userData.data) {
@@ -98,13 +101,14 @@ export default function App() {
       setCurrency(userData.data.currency ?? 'USD');
       setTheme(userData.data.theme ?? 'light');
       setLanguage(userData.data.language ?? 'en');
+      setBucketItems(userData.data.bucketItems ?? {});
     }
-  }, [userData.loading]);
+  }, [userData.data]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    saveData({ income, baselineExpenses, currency, theme, language });
-  }, [income, baselineExpenses, currency, theme, language, saveData]);
+    saveData({ income, baselineExpenses, currency, theme, language, bucketItems });
+  }, [income, baselineExpenses, currency, theme, language, bucketItems, saveData]);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
@@ -324,6 +328,8 @@ export default function App() {
             currency={currency}
             language={language}
             baselineExpenses={baselineExpenses}
+            items={bucketItems[selectedBucketId]}
+            onUpdateItems={(items) => setBucketItems((prev) => ({ ...prev, [selectedBucketId]: items }))}
             onClose={() => setSelectedBucketId(null)}
           />
         </Suspense>
