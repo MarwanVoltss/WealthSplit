@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ArrowRightLeft } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 
-export default function BucketCard({ icon: Icon, label, percentage, amount, color, bgColor, borderColor, tip, tips, currency, delay = 0, language }) {
+export default function BucketCard({ icon: Icon, label, percentage, amount, color, bgColor, borderColor, tip, tips, currency, delay = 0, language, onSelect }) {
   const [expanded, setExpanded] = useState(false);
   const t = useI18n(language);
 
@@ -82,22 +82,32 @@ export default function BucketCard({ icon: Icon, label, percentage, amount, colo
       {/* Expandable tip */}
       {(tip || tips) && (
         <div className="border-t border-gray-100 dark:border-gray-700/50">
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className={`flex items-center justify-between w-full px-5 py-3 text-xs font-medium
-              transition-colors duration-300 cursor-pointer
-              ${expanded
-                ? 'text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/30'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/20'}`}
-          >
-            <span>{expanded ? t.buckets.hideDetails : t.buckets.showDetails}</span>
-            <motion.div
-              animate={{ rotate: expanded ? 180 : 0 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
+          <div className="grid grid-cols-2 gap-px">
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className={`flex items-center justify-center gap-1.5 px-4 py-3 text-xs font-medium
+                transition-colors duration-300 cursor-pointer
+                ${expanded
+                  ? 'text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/30'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/20'}`}
             >
-              <ChevronDown size={14} />
-            </motion.div>
-          </button>
+              <ChevronDown size={14} className={`transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`} />
+              {expanded ? t.buckets.hideDetails : t.buckets.showDetails}
+            </button>
+            {onSelect && (
+              <button
+                onClick={onSelect}
+                className="flex items-center justify-center gap-1.5 px-4 py-3 text-xs font-semibold
+                  transition-colors duration-300 cursor-pointer
+                  text-gray-600 dark:text-gray-200 hover:text-white
+                  hover:bg-gray-600 dark:hover:bg-gray-600/60"
+                style={{ borderTop: `2px solid ${color}`, background: expanded ? 'rgba(0,0,0,0.03)' : 'transparent' }}
+              >
+                <ArrowRightLeft size={14} />
+                {t.buckets.viewBreakdown}
+              </button>
+            )}
+          </div>
           <AnimatePresence>
             {expanded && (
               <motion.div

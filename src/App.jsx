@@ -6,6 +6,7 @@ import IncomeInput from '@/components/IncomeInput';
 import DonutChart from '@/components/DonutChart';
 import BucketCard from '@/components/BucketCard';
 import StabilityTracker from '@/components/StabilityTracker';
+import BucketDetailModal from '@/components/BucketDetailModal';
 import Login from '@/components/Login';
 import { useAuth } from '@/lib/AuthContext';
 import { useI18n } from '@/lib/i18n';
@@ -81,6 +82,7 @@ export default function App() {
   const [currency, setCurrency] = useState(saved.currency ?? 'USD');
   const [theme, setTheme] = useState(saved.theme ?? 'light');
   const [language, setLanguage] = useState(saved.language ?? 'en');
+  const [selectedBucketId, setSelectedBucketId] = useState(null);
 
   const t = useI18n(language);
 
@@ -200,7 +202,7 @@ export default function App() {
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-5">
                   {t.chart.heading}
                 </h3>
-                <DonutChart buckets={displayBuckets} currency={currency} income={income} language={language} />
+                <DonutChart buckets={displayBuckets} currency={currency} income={income} language={language} onSelect={setSelectedBucketId} />
 
                 {/* Legend */}
                 <div className="mt-6 grid grid-cols-2 gap-3">
@@ -269,6 +271,7 @@ export default function App() {
                   currency={currency}
                   language={language}
                   delay={0.1 + i * 0.08}
+                  onSelect={() => setSelectedBucketId(b.id)}
                 />
               ))}
             </div>
@@ -312,6 +315,18 @@ export default function App() {
           </p>
         </motion.footer>
       </div>
+
+      {/* Bucket detail modal */}
+      {selectedBucketId && (
+        <BucketDetailModal
+          bucket={B.find((b) => b.id === selectedBucketId)}
+          amount={income * ((B.find((b) => b.id === selectedBucketId)?.percentage ?? 0) / 100)}
+          currency={currency}
+          language={language}
+          baselineExpenses={baselineExpenses}
+          onClose={() => setSelectedBucketId(null)}
+        />
+      )}
     </div>
   );
 }

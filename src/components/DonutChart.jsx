@@ -13,7 +13,7 @@ function formatAmount(val, symbol) {
   return `${symbol}${val.toFixed(0)}`;
 }
 
-export default function DonutChart({ buckets, currency, income, language }) {
+export default function DonutChart({ buckets, currency, income, language, onSelect }) {
   const t = useI18n(language);
   const symbol = CURRENCY_SYMBOLS[currency] || currency;
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -84,6 +84,7 @@ export default function DonutChart({ buckets, currency, income, language }) {
                 }}
                 onMouseEnter={() => setHoveredIndex(seg.index)}
                 onMouseLeave={() => setHoveredIndex(null)}
+                onClick={() => onSelect && onSelect(seg.id)}
               />
             );
           })}
@@ -121,6 +122,9 @@ export default function DonutChart({ buckets, currency, income, language }) {
           )}
         </motion.div>
       </div>
+      <p className="mt-3 text-center text-[10px] font-medium text-gray-400 dark:text-gray-500">
+        {t.chart.tapHint}
+      </p>
     </motion.div>
   );
 }

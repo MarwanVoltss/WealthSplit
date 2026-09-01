@@ -10,6 +10,7 @@ import { auth, db, isFirebaseConfigured } from './firebase';
 
 const DEMO_USER_KEY = 'wealthsplit-demo-user';
 const DEMO_DATA_KEY = 'wealthsplit-data';
+const REMEMBER_KEY = 'wealthsplit-remember';
 
 const AuthContext = createContext(null);
 
@@ -91,7 +92,24 @@ export function AuthProvider({ children }) {
   }, [user]);
 
   // ---- Auth actions ----
+  const recallCredentials = useCallback(() => {
+    try {
+      const raw = localStorage.getItem(REMEMBER_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  }, []);
+
+  // Persist entered credentials so the user never re-types them.
+  const rememberCredentials = useCallback((email, password) => {
+    try { localStorage.setItem(REMEMBER_KEY, JSON.stringify({ email, password })); } catch {}
+  }, []);
+
+  const clearRemembered = useCallback(() => {
+    try { localStorage.removeItem(REMEMBER_KEY); } catch {}
+  }, []);
+
   const signUp = async (email, password) => {
+    rememberCredentials(email, password);
     if (!isFirebaseConfigured) {
       // Demo: fake a local user so the flow is testable without Firebase
       const demoUser = { uid: 'demo', email, name: email };
@@ -104,6 +122,7 @@ export function AuthProvider({ children }) {
   };
 
   const logIn = async (email, password) => {
+    rememberCredentials(email, password);
     if (!isFirebaseConfigured) {
       const demoUser = { uid: 'demo', email, name: email };
       localStorage.setItem(DEMO_USER_KEY, JSON.stringify(demoUser));
@@ -115,6 +134,7 @@ export function AuthProvider({ children }) {
   };
 
   const logOut = async () => {
+    // Keep remembered credentials so the fields are pre-filled next time.
     if (!isFirebaseConfigured) {
       localStorage.removeItem(DEMO_USER_KEY);
       setUser(null);
@@ -131,6 +151,9 @@ export function AuthProvider({ children }) {
     signUp,
     logIn,
     logOut,
+    recallCredentials,
+    rememberCredentials,
+    clearRemembered,
     isFirebaseConfigured,
   };
 

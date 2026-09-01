@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Lock, LogIn, UserPlus, Eye, EyeOff, DollarSign, Languages } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/AuthContext';
 
 export default function Login({ language, setLanguage }) {
   const t = useI18n(language);
-  const { signUp, logIn, isFirebaseConfigured } = useAuth();
+  const { signUp, logIn, logOut, recallCredentials, rememberCredentials, clearRemembered, isFirebaseConfigured } = useAuth();
 
   const [mode, setMode] = useState('login'); // 'login' | 'signup'
   const [email, setEmail] = useState('');
@@ -14,6 +14,16 @@ export default function Login({ language, setLanguage }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [keepMeSignedIn, setKeepMeSignedIn] = useState(true);
+
+  // Pre-fill remembered credentials so the user never has to retype them.
+  useEffect(() => {
+    const saved = recallCredentials();
+    if (saved) {
+      setEmail(saved.email || '');
+      setPassword(saved.password || '');
+    }
+  }, [recallCredentials]);
 
   const mapError = (e) => {
     const code = e?.code || '';
@@ -33,6 +43,9 @@ export default function Login({ language, setLanguage }) {
         await logIn(email.trim(), password);
       } else {
         await signUp(email.trim(), password);
+      }
+      if (!keepMeSignedIn) {
+        clearRemembered();
       }
     } catch (err) {
       setError(mapError(err));
@@ -189,6 +202,21 @@ export default function Login({ language, setLanguage }) {
               >
                 {error}
               </motion.p>
+            )}
+
+            {mode === 'login' && (
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={keepMeSignedIn}
+                  onChange={(e) => setKeepMeSignedIn(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-emerald-600
+                    focus:ring-emerald-500 dark:focus:ring-emerald-400 cursor-pointer"
+                />
+                <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
+                  {t.auth.keepMe}
+                </span>
+              </label>
             )}
 
             <motion.button
